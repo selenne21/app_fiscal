@@ -9,12 +9,12 @@ st.title("Mi primer proyecto")
 munis=data["entidad"].unique().tolist()
 
 
-st.dataframe(data)
+#st.dataframe(data)
 mun= st.selectbox("seleccion de municipio",
 munis)
 
 filtro =data[data["entidad"]==mun]
-st.dataframe(filtro)
+#st.dataframe(filtro)
 
 gen=(filtro
 .groupby("clas_gen")["total_recaudo"]
@@ -31,17 +31,30 @@ total_det=det.sum()
 det=(det/total_det).round(2)
 
 
-st.dataframe(gen) #general
+#st.dataframe(gen) #general
 
 
-st.dataframe(det)# clasificacion 
+#st.dataframe(det)# clasificacion 
 
 
 
-fig, ax = plt.subplots(1,1, figsize=(10,6))
-ax.pie(gen.values,labels=gen.index)
 
-st.pyplot(fig)
+
+
+# Crear el gráfico de pastel con Plotly Express
+fig = px.pie(
+    gen, 
+    values=gen.values,   # los valores numéricos
+    names=gen.index,     # las etiquetas
+    title="Pie Chart con Plotly",
+    color_discrete_sequence=["#472836","#F2D0A4","#B298DC"]
+)
+
+
+
+# Mostrar en Streamlit
+st.plotly_chart(fig)
+
 
 fig,ax=plt.subplots(1,1, figsize=(10,6))
 ax.pie(det.values,labels=det.index)
@@ -50,11 +63,12 @@ fin=(filtro
      .groupby(["clas_gen","clasificacion_ofpuj"])["total_recaudo"]
     . sum()
     .reset_index())
-st.dataframe(fin)
+#st.dataframe(fin)
 fig =px.treemap(fin,path=[px.Constant("total"),
                       "clas_gen",
                       "clasificacion_ofpuj"],
-                      values="total_recaudo")
+                      values="total_recaudo",
+    color_discrete_sequence=["#472836","#F2D0A4","#B298DC"])
 
 st.plotly_chart(fig)
 
