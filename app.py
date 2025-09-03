@@ -2,7 +2,13 @@ import streamlit as st
 import pandas as pd 
 import matplotlib.pyplot as plt
 import plotly.express as px
+import geopandas as gpd
+
+data=pd.read_csv("munis.csv")
+gdf=gpd.read_parquet("muns.parquet")
 data=pd.read_csv("munis.csv") 
+
+st.dataframe(gdf)
 
 
 st.title("Mi primer proyecto")
@@ -71,5 +77,15 @@ fig =px.treemap(fin,path=[px.Constant("total"),
     color_discrete_sequence=["#472836","#F2D0A4","#B298DC"])
 
 st.plotly_chart(fig)
+filtro2 = gdf[gdf["entidad"]==mun][["codigo_alt","geometry"]]
 
+st.dataframe(filtro2)
+
+
+
+fig, ax = plt.subplots(1,1)
+
+filtro2.plot(ax=ax)
+
+st.pyplot(fig)
 
